@@ -1,0 +1,21 @@
+{
+  "name": "vscode-extensions",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "workspaces": [
+    "css/**"
+  ],
+  "devDependencies": {
+    "yo": "^4.3.0",
+    "generator-code": "^1.6.8"
+  },
+  "scripts": {
+    "yo:code": "yo code"
+  },
+  "volta": {
+    "node": "16.14.0",
+    "npm": "8.5.3"
+  }
+}

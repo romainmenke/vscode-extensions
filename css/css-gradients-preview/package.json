@@ -1,0 +1,42 @@
+{
+  "name": "css-gradients-preview",
+	"displayName": "css-gradients-preview",
+	"description": "Preview CSS gradients",
+	"version": "1.0.0",
+	"engines": {
+		"vscode": "^1.65.0"
+	},
+	"categories": [
+		"Visualization"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./dist/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"lint": "eslint src --ext ts"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.65.0",
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^9.1.0",
+		"@types/node": "14.x",
+		"@typescript-eslint/eslint-plugin": "^5.12.1",
+		"@typescript-eslint/parser": "^5.12.1",
+		"eslint": "^8.9.0",
+		"glob": "^7.2.0",
+		"mocha": "^9.2.1",
+		"typescript": "^4.5.5",
+		"ts-loader": "^9.2.6",
+		"webpack": "^5.69.1",
+		"webpack-cli": "^4.9.2",
+		"@vscode/test-electron": "^2.1.2",
+		"postcss": "^8.4.7",
+		"postcss-value-parser": "^4.2.0",
+		"postcss-preset-env": "^7.4.2"
+	}
+}
