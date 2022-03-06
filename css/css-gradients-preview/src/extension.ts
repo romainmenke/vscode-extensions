@@ -8,8 +8,6 @@ const valueParser = require('postcss-value-parser');
 
 export const log = vscode.window.createOutputChannel("CSS Gradients Preview");
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	const presetEnv = postcssPresetEnv({
 		stage: 0,
@@ -28,6 +26,14 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 	});
+
+	const lastGradient: {
+		document: string | undefined,
+		gradient: string | undefined,
+	} = {
+		document: undefined,
+		gradient: undefined,
+	};
 
 	let timeout: NodeJS.Timer | undefined = undefined;
 
@@ -61,60 +67,73 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	let currentPanel: vscode.WebviewPanel | undefined = undefined;
 	
+	async function renderWebview(args: { gradient?: string, document?: string }) {
+		if (!args.gradient) {
+			return;
+		}
+
+		if (args.document) {
+			lastGradient.document = args.document;
+			lastGradient.gradient = args.gradient;
+		} else {
+			lastGradient.document = undefined;
+			lastGradient.gradient = undefined;
+		}
+
+		let gradient = '';
+		try {
+			const result = await postcss([presetEnv]).process(`body { background: ${args.gradient} }`, { from: 'gradient' });
+			result.root.walkDecls(decl => {
+				if (decl.prop === 'background') {
+					gradient = decl.value;
+				}
+			});
+		} catch (_) {
+			return;
+		}
+
+		if (!gradient) {
+			return;
+		}
+
+		if (currentPanel) {
+			currentPanel.reveal(vscode.ViewColumn.Two, true);
+			currentPanel.webview.postMessage({ gradient: gradient });
+		} else {
+			currentPanel = vscode.window.createWebviewPanel(
+				'cssGradientsPreview',
+				'CSS Gradients Preview',
+				{
+					viewColumn: vscode.ViewColumn.Two,
+					preserveFocus: true,
+				},
+				{
+					enableScripts: true,
+				}
+			);
+
+			const updateWebview = () => {
+				if (!currentPanel) {
+					return;
+				}
+				currentPanel.webview.html = webViewContent;
+			};
+
+			// Set initial content
+			updateWebview();
+			currentPanel.webview.postMessage({ gradient: gradient });
+			currentPanel.onDidDispose(
+				() => {
+					currentPanel = undefined;
+				},
+				undefined,
+				context.subscriptions
+			);
+		}
+	}
+
 	context.subscriptions.push(
-		vscode.commands.registerCommand('cssGradientsPreview.display', async (args: { gradient?: string }) => {
-			if (!args.gradient) {
-				return;
-			}
-
-			let gradient = '';
-			try {
-				const result = await postcss([presetEnv]).process(`body { background: ${args.gradient} }`, { from: 'gradient' });
-				result.root.walkDecls(decl => {
-					if (decl.prop === 'background') {
-						gradient = decl.value;
-					}
-				});
-			} catch (_) {
-				return;
-			}
-
-			if (!gradient) {
-				return;
-			}
-
-			if (currentPanel) {
-				currentPanel.reveal(vscode.ViewColumn.Two);
-				currentPanel.webview.postMessage({ gradient: gradient });
-			} else {
-				currentPanel = vscode.window.createWebviewPanel(
-					'cssGradientsPreview',
-					'CSS Gradients Preview',
-					vscode.ViewColumn.Two,
-					{
-						enableScripts: true
-					}
-				);
-
-				const updateWebview = () => {
-					if (!currentPanel) {
-						return;
-					}
-					currentPanel.webview.html = webViewContent;
-				};
-
-				// Set initial content
-				updateWebview();
-				currentPanel.webview.postMessage({ gradient: gradient});
-				currentPanel.onDidDispose(
-					() => {
-						currentPanel = undefined;
-					},
-					undefined,
-					context.subscriptions
-				);
-			}
-		})
+		vscode.commands.registerCommand('cssGradientsPreview.display', renderWebview)
 	);
 
 	// create a decorator type that we use to decorate small numbers
@@ -191,7 +210,7 @@ export function activate(context: vscode.ExtensionContext) {
 					);
 
 					const cmdUri = vscode.Uri.parse(
-						`command:cssGradientsPreview.display?${encodeURIComponent(JSON.stringify({ gradient: gradientStr }))}`
+						`command:cssGradientsPreview.display?${encodeURIComponent(JSON.stringify({ gradient: gradientStr, document: activeEditor?.document.uri.toString() }))}`
 					);
 
 					const hover = new vscode.MarkdownString();
@@ -200,6 +219,17 @@ export function activate(context: vscode.ExtensionContext) {
 					const decoration = { range: gradientRange, hoverMessage: hover, renderOptions: { before: { contentText: '' } } };
 					gradientDecorations.push(decoration);
 				});
+
+				if (lastGradient.gradient && lastGradient.document && (lastGradient.document === activeEditor?.document.uri.toString())) {
+					const closestGradient = mostSimilar(
+						lastGradient.gradient,
+						gradients.map(gradient => valueParser.stringify(gradient))
+					);
+
+					if (closestGradient.mostSimilar && closestGradient.distance < 15) {
+						renderWebview({ gradient: closestGradient.mostSimilar, document: activeEditor?.document.uri.toString() });
+					}
+				}
 			} catch (_) {
 				return;
 			}
@@ -229,7 +259,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		debounce = setTimeout(() => {
 			triggerUpdateDecorations();
-		}, 1000);
+		}, 500);
 	}
 		
 	vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -241,7 +271,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			debounce = setTimeout(() => {
 				triggerUpdateDecorations();
-			}, 1000);
+			}, 500);
 		}
 	}, null, context.subscriptions);
 
@@ -253,7 +283,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			debounce = setTimeout(() => {
 				triggerUpdateDecorations();
-			}, 1000);
+			}, 500);
 		}
 	}, null, context.subscriptions);
 }
@@ -270,4 +300,47 @@ function isGradientsFunctions(str: string): boolean {
 		str === 'repeating-linear-gradient' ||
 		str === 'repeating-radial-gradient'
 	);
+}
+
+function mostSimilar(a: string, b: Array<string>) {
+	let mostSimilar = '';
+	let leastDistance = Infinity;
+
+	for (let j = 0; j < b.length; j++) {
+		const distance = levenshteinDistance(a, b[j]);
+		if (distance < leastDistance) {
+			leastDistance = distance;
+			mostSimilar = b[j];
+		}
+	}
+
+	return {
+		mostSimilar: mostSimilar,
+		distance: leastDistance,
+	};
+}
+
+
+function levenshteinDistance(s : string, t : string) {
+	if (!s.length) {
+		return t.length;
+	}
+	if (!t.length) {
+		return s.length;
+	}
+	const arr = [];
+	for (let i = 0; i <= t.length; i++) {
+		arr[i] = [i];
+		for (let j = 1; j <= s.length; j++) {
+			arr[i][j] =
+				i === 0
+					? j
+					: Math.min(
+						arr[i - 1][j] + 1,
+						arr[i][j - 1] + 1,
+						arr[i - 1][j - 1] + (s[j - 1] === t[i - 1] ? 0 : 1),
+					);
+		}
+	}
+	return arr[t.length][s.length];
 }

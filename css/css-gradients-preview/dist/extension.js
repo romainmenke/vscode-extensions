@@ -40,8 +40,6 @@ const postcss_1 = __importDefault(__webpack_require__(2));
 const postcssPresetEnv = __webpack_require__(47);
 const valueParser = __webpack_require__(874);
 exports.log = vscode.window.createOutputChannel("CSS Gradients Preview");
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 function activate(context) {
     const presetEnv = postcssPresetEnv({
         stage: 0,
@@ -60,6 +58,10 @@ function activate(context) {
             }
         }
     });
+    const lastGradient = {
+        document: undefined,
+        gradient: undefined,
+    };
     let timeout = undefined;
     let webViewContent = `<!DOCTYPE html>
 		<html lang="en">
@@ -89,9 +91,17 @@ function activate(context) {
 		</html>
 `;
     let currentPanel = undefined;
-    context.subscriptions.push(vscode.commands.registerCommand('cssGradientsPreview.display', async (args) => {
+    async function renderWebview(args) {
         if (!args.gradient) {
             return;
+        }
+        if (args.document) {
+            lastGradient.document = args.document;
+            lastGradient.gradient = args.gradient;
+        }
+        else {
+            lastGradient.document = undefined;
+            lastGradient.gradient = undefined;
         }
         let gradient = '';
         try {
@@ -109,12 +119,15 @@ function activate(context) {
             return;
         }
         if (currentPanel) {
-            currentPanel.reveal(vscode.ViewColumn.Two);
+            currentPanel.reveal(vscode.ViewColumn.Two, true);
             currentPanel.webview.postMessage({ gradient: gradient });
         }
         else {
-            currentPanel = vscode.window.createWebviewPanel('cssGradientsPreview', 'CSS Gradients Preview', vscode.ViewColumn.Two, {
-                enableScripts: true
+            currentPanel = vscode.window.createWebviewPanel('cssGradientsPreview', 'CSS Gradients Preview', {
+                viewColumn: vscode.ViewColumn.Two,
+                preserveFocus: true,
+            }, {
+                enableScripts: true,
             });
             const updateWebview = () => {
                 if (!currentPanel) {
@@ -129,7 +142,8 @@ function activate(context) {
                 currentPanel = undefined;
             }, undefined, context.subscriptions);
         }
-    }));
+    }
+    context.subscriptions.push(vscode.commands.registerCommand('cssGradientsPreview.display', renderWebview));
     // create a decorator type that we use to decorate small numbers
     const gradientDecorationType = vscode.window.createTextEditorDecorationType({
         light: {
@@ -188,13 +202,19 @@ function activate(context) {
                     const gradientStart = decl.positionInside(startIndex + gradient.sourceIndex);
                     const gradientEnd = decl.positionInside(startIndex + gradient.sourceIndex + gradientStr.length);
                     const gradientRange = new vscode.Range(new vscode.Position(gradientStart.line - 1, gradientStart.column - 1), new vscode.Position(gradientEnd.line - 1, gradientEnd.column - 1));
-                    const cmdUri = vscode.Uri.parse(`command:cssGradientsPreview.display?${encodeURIComponent(JSON.stringify({ gradient: gradientStr }))}`);
+                    const cmdUri = vscode.Uri.parse(`command:cssGradientsPreview.display?${encodeURIComponent(JSON.stringify({ gradient: gradientStr, document: activeEditor?.document.uri.toString() }))}`);
                     const hover = new vscode.MarkdownString();
                     hover.isTrusted = true;
                     hover.appendMarkdown(`[Show Gradient](${cmdUri})`);
                     const decoration = { range: gradientRange, hoverMessage: hover, renderOptions: { before: { contentText: '' } } };
                     gradientDecorations.push(decoration);
                 });
+                if (lastGradient.gradient && lastGradient.document && (lastGradient.document === activeEditor?.document.uri.toString())) {
+                    const closestGradient = mostSimilar(lastGradient.gradient, gradients.map(gradient => valueParser.stringify(gradient)));
+                    if (closestGradient.mostSimilar && closestGradient.distance < 15) {
+                        renderWebview({ gradient: closestGradient.mostSimilar, document: activeEditor?.document.uri.toString() });
+                    }
+                }
             }
             catch (_) {
                 return;
@@ -221,7 +241,7 @@ function activate(context) {
         }
         debounce = setTimeout(() => {
             triggerUpdateDecorations();
-        }, 1000);
+        }, 500);
     }
     vscode.window.onDidChangeActiveTextEditor(editor => {
         activeEditor = editor;
@@ -231,7 +251,7 @@ function activate(context) {
             }
             debounce = setTimeout(() => {
                 triggerUpdateDecorations();
-            }, 1000);
+            }, 500);
         }
     }, null, context.subscriptions);
     vscode.workspace.onDidChangeTextDocument(event => {
@@ -241,7 +261,7 @@ function activate(context) {
             }
             debounce = setTimeout(() => {
                 triggerUpdateDecorations();
-            }, 1000);
+            }, 500);
         }
     }, null, context.subscriptions);
 }
@@ -256,6 +276,40 @@ function isGradientsFunctions(str) {
         str === 'repeating-conic-gradient' ||
         str === 'repeating-linear-gradient' ||
         str === 'repeating-radial-gradient');
+}
+function mostSimilar(a, b) {
+    let mostSimilar = '';
+    let leastDistance = Infinity;
+    for (let j = 0; j < b.length; j++) {
+        const distance = levenshteinDistance(a, b[j]);
+        if (distance < leastDistance) {
+            leastDistance = distance;
+            mostSimilar = b[j];
+        }
+    }
+    return {
+        mostSimilar: mostSimilar,
+        distance: leastDistance,
+    };
+}
+function levenshteinDistance(s, t) {
+    if (!s.length) {
+        return t.length;
+    }
+    if (!t.length) {
+        return s.length;
+    }
+    const arr = [];
+    for (let i = 0; i <= t.length; i++) {
+        arr[i] = [i];
+        for (let j = 1; j <= s.length; j++) {
+            arr[i][j] =
+                i === 0
+                    ? j
+                    : Math.min(arr[i - 1][j] + 1, arr[i][j - 1] + 1, arr[i - 1][j - 1] + (s[j - 1] === t[i - 1] ? 0 : 1));
+        }
+    }
+    return arr[t.length][s.length];
 }
 
 
