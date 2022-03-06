@@ -150,8 +150,8 @@ export function activate(context: vscode.ExtensionContext) {
 		},
 		before: {
 			width: '0.8em',
-			height: '0.8em',
-			margin: '0.0625em 0.1em 0 0.0625em',
+			height: '0.7em',
+			margin: '0 0.1em 0 0.0625em',
 		}
 	});
 

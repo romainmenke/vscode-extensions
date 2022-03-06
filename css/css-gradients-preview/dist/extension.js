@@ -158,8 +158,8 @@ function activate(context) {
         },
         before: {
             width: '0.8em',
-            height: '0.8em',
-            margin: '0.0625em 0.1em 0 0.0625em',
+            height: '0.7em',
+            margin: '0 0.1em 0 0.0625em',
         }
     });
     let activeEditor = vscode.window.activeTextEditor;
