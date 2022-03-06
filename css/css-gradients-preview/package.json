@@ -1,6 +1,6 @@
 {
-	"name": "CSS Gradients Preview",
-	"displayName": "css-gradients-preview",
+	"name": "css-gradients-preview",
+	"displayName": "CSS Gradients Preview",
 	"description": "Preview CSS gradients",
 	"author": "Romain Menke",
 	"publisher": "RomainMenke",
@@ -10,7 +10,7 @@
 		"url": "https://github.com/romainmenke/vscode-extensions.git",
 		"directory": "css/css-gradients-preview"
 	},
-	"version": "1.0.2",
+	"version": "1.0.1",
 	"engines": {
 		"vscode": "^1.65.0"
 	},
