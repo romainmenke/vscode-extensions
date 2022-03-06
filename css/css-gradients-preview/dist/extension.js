@@ -43,6 +43,7 @@ exports.log = vscode.window.createOutputChannel("CSS Gradients Preview");
 function activate(context) {
     const presetEnv = postcssPresetEnv({
         stage: 0,
+        browsers: 'Chrome > 80',
         preserve: false,
         enableProgressiveCustomProperties: false,
         features: {
@@ -76,7 +77,7 @@ function activate(context) {
 					style="
 						width: 100vw;
 						height: 100vh;
-						background: red;
+						background: transparent;
 					"
 				></div>
 
