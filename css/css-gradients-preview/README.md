@@ -13,6 +13,8 @@ This is not very solid and you might need to click `Show Gradient` again to see 
 
 ![Gradients will refresh automatically](css/css-gradients-preview/images/preview-1.png)
 
+Uses [PostCSS Preset Env](https://github.com/csstools/postcss-plugins/tree/main/plugin-packs/postcss-preset-env) to preview color functions like `oklch` which are not yet supported by VSCode.
+
 ## Known Issues
 
 Will not work with CSS variables.
@@ -32,9 +34,9 @@ Only self contained CSS gradients are supported.
 }
 ```
 
-## Release Notes
+### 1.0.3
 
-Users appreciate release notes as you update your extension.
+Various fixes.
 
 ### 1.0.0
 
