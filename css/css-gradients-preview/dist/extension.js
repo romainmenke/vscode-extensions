@@ -33,8 +33,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.deactivate = exports.activate = exports.log = void 0;
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 const vscode = __importStar(__webpack_require__(1));
 const postcss_1 = __importDefault(__webpack_require__(2));
 const postcssPresetEnv = __webpack_require__(47);
