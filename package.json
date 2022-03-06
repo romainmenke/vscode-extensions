@@ -9,10 +9,12 @@
   ],
   "devDependencies": {
     "yo": "^4.3.0",
-    "generator-code": "^1.6.8"
+    "generator-code": "^1.6.8",
+    "vsce": "^2.6.7"
   },
   "scripts": {
-    "yo:code": "yo code"
+    "yo:code": "yo code",
+    "vsce": "vsce"
   },
   "volta": {
     "node": "16.14.0",

@@ -6,12 +6,12 @@ Preview CSS gradients in VSCode with live updates.
 
 Hover over a CSS gradient and click `Show Gradient`.
 
-![Open the gradients preview](images/preview-2.png)
+![Open the gradients preview](css/css-gradients-preview/images/preview-2.png)
 
 Once shown the preview will update as you change code.
 This is not very solid and you might need to click `Show Gradient` again to see the updated preview.
 
-![Gradients will refresh automatically](images/preview-1.png)
+![Gradients will refresh automatically](css/css-gradients-preview/images/preview-1.png)
 
 ## Known Issues
 
