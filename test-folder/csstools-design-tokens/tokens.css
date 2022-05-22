@@ -1,0 +1,8 @@
+@design-tokens url('./tokens.json') format('style-dictionary3');
+@design-tokens url('./tokens.blue-theme.json') format('style-dictionary3') when('blue-theme' 'dark');
+
+.foo {
+	font-size: 16px;
+	padding: design-token('size.spacing.small');
+	color: design-token('color.background.primary');
+}
