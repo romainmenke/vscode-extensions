@@ -106,7 +106,7 @@ export function activate(context: vscode.ExtensionContext) {
 				if (tokenRange.contains(position)) {
 					return new vscode.Hover(new vscode.MarkdownString(
 						[
-							token.name,
+							`Token: ${token.name}`,
 							`_${tokenPath}_`,
 							token.cssValue(),
 							token.comment,
