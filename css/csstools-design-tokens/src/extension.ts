@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const completionItems: Array<vscode.CompletionItem> = [];
 
-			{
+			if (position.character === 0) {
 				const completionItem = new vscode.CompletionItem('@design-tokens', vscode.CompletionItemKind.Snippet);
 				completionItem.insertText = new vscode.SnippetString(
 					"@design-tokens url('$1') format('${2:style-dictionary3}');$0"
@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 				completionItems.push(completionItem);
 			}
 
-			{
+			if (position.character === 0) {
 				const completionItem = new vscode.CompletionItem('@design-tokens when', vscode.CompletionItemKind.Snippet);
 				completionItem.insertText = new vscode.SnippetString(
 					"@design-tokens url('$1') format('${2:style-dictionary3}') when('$3');$0"
@@ -63,6 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 			for (const [tokenPath, token] of tokens.tokens().entries()) {
 				const completionItem = new vscode.CompletionItem(tokenPath + ` ${token.cssValue()}`, vscode.CompletionItemKind.Variable);
 				completionItem.insertText = `design-token('${tokenPath}')`;
+				completionItem.filterText = `design-token('${tokenPath}') ${token.cssValue()}`;
 
 				if (token.comment) {
 					completionItem.documentation = new vscode.MarkdownString(token.comment);
