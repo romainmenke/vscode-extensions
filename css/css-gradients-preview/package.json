@@ -10,7 +10,7 @@
 		"url": "https://github.com/romainmenke/vscode-extensions.git",
 		"directory": "css/css-gradients-preview"
 	},
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"engines": {
 		"vscode": "^1.65.0"
 	},

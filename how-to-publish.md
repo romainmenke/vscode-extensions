@@ -1,6 +1,8 @@
-# VSCode marker place
+# VSCode market place
 
-_TODO : add notes here_
+- Create a `PAT` at `https://dev.azure.com/<my-name>/_usersSettings/tokens`
+- `npm run vsce login <my-name>`
+- run `npm `
 
 # OPENVSX
 

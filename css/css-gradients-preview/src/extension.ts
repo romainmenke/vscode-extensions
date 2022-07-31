@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 		gradient: undefined,
 	};
 
-	let timeout: NodeJS.Timer | undefined = undefined;
+	let timeout: NodeJS.Timer | null = null;
 
 	let webViewContent = `<!DOCTYPE html>
 		<html lang="en">
@@ -64,9 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
 		</html>
 `;
 	
-	let currentPanel: vscode.WebviewPanel | undefined = undefined;
+	let currentPanel: vscode.WebviewPanel | null = null;
 	
-	async function renderWebview(args: { gradient?: string, document?: string }) {
+	async function renderWebview(args: { gradient?: string, document?: string, focus?: boolean }) {
 		if (!args.gradient) {
 			return;
 		}
@@ -96,7 +96,9 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		if (currentPanel) {
-			currentPanel.reveal(vscode.ViewColumn.Two, true);
+			if (args.focus) {
+				currentPanel.reveal(vscode.ViewColumn.Two, true);
+			}
 			currentPanel.webview.postMessage({ gradient: gradient });
 		} else {
 			currentPanel = vscode.window.createWebviewPanel(
@@ -123,7 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
 			currentPanel.webview.postMessage({ gradient: gradient });
 			currentPanel.onDidDispose(
 				() => {
-					currentPanel = undefined;
+					currentPanel = null;
 				},
 				undefined,
 				context.subscriptions
@@ -168,6 +170,9 @@ export function activate(context: vscode.ExtensionContext) {
 		const gradientDecorations: vscode.DecorationOptions[] = [];
 
 		const css = activeEditor.document.getText();
+		if (!maybeHasGradientFunctions(css)) {
+			return;
+		}
 
 		let ast : Root | undefined = undefined;
 		try {
@@ -209,7 +214,7 @@ export function activate(context: vscode.ExtensionContext) {
 					);
 
 					const cmdUri = vscode.Uri.parse(
-						`command:cssGradientsPreview.display?${encodeURIComponent(JSON.stringify({ gradient: gradientStr, document: activeEditor?.document.uri.toString() }))}`
+						`command:cssGradientsPreview.display?${encodeURIComponent(JSON.stringify({ gradient: gradientStr, document: activeEditor?.document.uri.toString(), focus: true }))}`
 					);
 
 					const hover = new vscode.MarkdownString();
@@ -219,14 +224,14 @@ export function activate(context: vscode.ExtensionContext) {
 					gradientDecorations.push(decoration);
 				});
 
-				if (lastGradient.gradient && lastGradient.document && (lastGradient.document === activeEditor?.document.uri.toString())) {
+				if (currentPanel && lastGradient.gradient && lastGradient.document && (lastGradient.document === activeEditor?.document.uri.toString())) {
 					const closestGradient = mostSimilar(
 						lastGradient.gradient,
 						gradients.map(gradient => valueParser.stringify(gradient))
 					);
 
 					if (closestGradient.mostSimilar && closestGradient.distance < 15) {
-						renderWebview({ gradient: closestGradient.mostSimilar, document: activeEditor?.document.uri.toString() });
+						renderWebview({ gradient: closestGradient.mostSimilar, document: activeEditor?.document.uri.toString(), focus: false });
 					}
 				}
 			} catch (_) {
@@ -237,16 +242,13 @@ export function activate(context: vscode.ExtensionContext) {
 		activeEditor.setDecorations(gradientDecorationType, gradientDecorations);
 	}
 
-	function triggerUpdateDecorations(throttle: boolean = false) {
+	function triggerUpdateDecorations() {
 		if (timeout) {
 			clearTimeout(timeout);
-			timeout = undefined;
+			timeout = null;
 		}
-		if (throttle) {
-			timeout = setTimeout(updateDecorations, 500);
-		} else {
-			updateDecorations();
-		}
+
+		updateDecorations();
 	}
 
 	let debounce: NodeJS.Timeout|undefined = undefined;
@@ -285,6 +287,13 @@ export function activate(context: vscode.ExtensionContext) {
 			}, 500);
 		}
 	}, null, context.subscriptions);
+
+	vscode.workspace.onDidCloseTextDocument(document => {
+		if (activeEditor && document.uri?.toString() === activeEditor.document?.uri?.toString()) {
+			currentPanel?.dispose();
+			activeEditor = undefined;
+		}
+	}, null, context.subscriptions);
 }
 
 // this method is called when your extension is deactivated
@@ -298,6 +307,17 @@ function isGradientsFunctions(str: string): boolean {
 		str === 'repeating-conic-gradient' ||
 		str === 'repeating-linear-gradient' ||
 		str === 'repeating-radial-gradient'
+	);
+}
+
+function maybeHasGradientFunctions(str: string): boolean {
+	return (
+		str.includes('conic-gradient(') ||
+		str.includes('linear-gradient(') ||
+		str.includes('radial-gradient(') ||
+		str.includes('repeating-conic-gradient(') ||
+		str.includes('repeating-linear-gradient(') ||
+		str.includes('repeating-radial-gradient(')
 	);
 }
 
