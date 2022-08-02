@@ -10,7 +10,12 @@ export interface PluginContainer {
 	reset: () => void;
 }
 
-export function pluginContainer(): PluginContainer {
+export type pluginOptions = {
+	importAtRuleName: string,
+	valueFunctionName: string,
+};
+
+export function pluginContainer(options: pluginOptions): PluginContainer {
 	const data: {
 		tokens: Map<string, Token>;
 		conditionalTokens: Map<string, Map<string, Token>>;
@@ -26,7 +31,11 @@ export function pluginContainer(): PluginContainer {
 			postcssPlugin: 'postcss-design-tokens',
 			Once: async (root, { result }) => {
 				const designTokenAtRules: Array<{ filePath: string, params: string, node: Node }> = [];
-				root.walkAtRules('design-tokens', (atRule) => {
+				root.walkAtRules((atRule) => {
+					if (atRule.name.toLocaleLowerCase() !== options.importAtRuleName) {
+						return;
+					}
+
 					if (!atRule?.source?.input?.file) {
 						return;
 					}

@@ -10,7 +10,7 @@
 		"url": "https://github.com/romainmenke/vscode-extensions.git",
 		"directory": "css/csstools-design-tokens"
 	},
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"engines": {
 		"vscode": "^1.65.0"
 	},
@@ -20,6 +20,21 @@
 	"activationEvents": [
 		"onLanguage:css"
 	],
+	"contributes": {
+		"configuration": [
+			{
+				"title": "Design Tokens",
+				"properties": {
+					"designTokens.importAtRuleName": {
+						"type": "string"
+					},
+					"designTokens.valueFunctionName": {
+						"type": "string"
+					}
+				}
+			}
+		]
+	},
 	"main": "./dist/extension.js",
 	"scripts": {
 		"vscode:prepublish": "npm run package",
