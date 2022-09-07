@@ -10,9 +10,17 @@ function extractTokens(node: StyleDictionaryV3TokenGroup, path: Array<string>, f
 	const result: Map<string, StyleDictionaryV3TokenValue> = new Map();
 	for (const key in node) {
 		if (Object.hasOwnProperty.call(node, key)) {
+			if (
+				node[key] === null ||
+				typeof node[key] !== 'object' ||
+				Array.isArray(node[key])
+			) {
+				throw new Error(`Parsing error at "${[...path, key].join('.')}"`);
+			}
+
 			const child = Object(node[key]);
 			if (!child) {
-				throw new Error('Parsing error');
+				throw new Error(`Parsing error at "${[...path, key].join('.')}"`);
 			}
 
 			if (typeof child['value'] !== 'undefined') {

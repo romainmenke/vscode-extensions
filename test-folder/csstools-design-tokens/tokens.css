@@ -1,8 +1,10 @@
 @design-tokens url('./tokens.json') format('style-dictionary3');
+@design-tokens url('./broken-tokens.json') format('style-dictionary3');
 @design-tokens url('./tokens.blue-theme.json') format('style-dictionary3') when('blue-theme' 'dark');
+@design-tokens url(node_modules://style-dictionary-design-tokens-example/style-dictionary.tokens.json) format('style-dictionary3');
 
 .foo {
-	font-size: 16px;
+	font-size: design-token('size.font.small' to rem);
 	padding: design-token('size.spacing.small');
 	color: design-token('color.background.primary');
 }

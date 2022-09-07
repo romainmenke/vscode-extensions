@@ -57,8 +57,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const completionItems: Array<vscode.CompletionItem> = [];
 
-			log.appendLine(document.lineAt(position.line).text);
-
 			if (position.character === 0 || document.lineAt(position.line).text.startsWith('@' + options.importAtRuleName)) {
 				{
 					const completionItem = new vscode.CompletionItem('@' + options.importAtRuleName, vscode.CompletionItemKind.Snippet);

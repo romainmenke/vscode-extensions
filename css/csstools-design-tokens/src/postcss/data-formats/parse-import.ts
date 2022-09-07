@@ -4,6 +4,9 @@ import { extractStyleDictionaryTokens } from './style-dictionary/style-dictionar
 import path from 'path';
 import * as vscode from 'vscode';
 
+// @ts-ignore
+const requireFunc = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
+
 function parseImport(statement: string): { filePath: string, format: string, conditions: Array<string> } {
 	const importAST = valueParser(statement);
 
@@ -35,7 +38,21 @@ function parseImport(statement: string): { filePath: string, format: string, con
 export async function tokensFromImport(sourceFilePath: string, statement: string, alreadyImported: Set<string>): Promise<{ filePath: string, tokens: Map<string, Token>, conditions: Array<string> }|false> {
 	const { filePath, format, conditions } = parseImport(statement);
 
-	const resolvedPath = path.resolve(path.dirname(sourceFilePath), filePath);
+	let resolvedPath = '';
+	if (filePath.startsWith('node_modules://')) {
+		try {
+			resolvedPath = requireFunc.resolve(filePath.slice(15), {
+				paths: [
+					path.dirname(sourceFilePath),
+				],
+			});
+		} catch (e) {
+			resolvedPath = path.resolve(path.dirname(sourceFilePath), filePath);
+		}
+	} else {
+		resolvedPath = path.resolve(path.dirname(sourceFilePath), filePath);
+	}
+
 	if (alreadyImported.has(resolvedPath)) {
 		return false;
 	}

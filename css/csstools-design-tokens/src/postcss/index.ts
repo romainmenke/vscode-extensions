@@ -78,7 +78,7 @@ export function pluginContainer(options: pluginOptions): PluginContainer {
 
 						const conditionalTokens = data.conditionalTokens.get(condition)!;
 						data.conditionalTokens.set(condition, mergeTokens(conditionalTokens, importResult.tokens));
-						return;
+						continue;
 					}
 
 					data.tokens = mergeTokens(data.tokens, importResult.tokens);
