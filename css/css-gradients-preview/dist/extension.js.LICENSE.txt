@@ -1,6 +1,19 @@
 /*! https://mths.be/cssesc v3.0.0 by @mathias */
 
 /**
+ * @description Calculate deltaE OK which is the simple root sum of squares
+ * @param {number[]} reference - Array of OKLab values: L as 0..1, a and b as -1..1
+ * @param {number[]} sample - Array of OKLab values: L as 0..1, a and b as -1..1
+ * @return {number} How different a color sample is from reference
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/deltaEOK.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/deltaEOK.js
+ */
+
+/**
  * @license Fraction.js v4.2.0 05/03/2022
  * https://www.xarg.org/2014/03/rational-numbers-in-javascript/
  *
@@ -9,8 +22,7 @@
  **/
 
 /**
- * @license W3C
- * https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
  *
  * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
  *
@@ -18,12 +30,434 @@
  */
 
 /**
- * @license W3C
- * https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
  *
- * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/deltaEOK.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
  *
- * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/deltaEOK.js
+ * XYZ <-> LMS matrices recalculated for consistent reference white
+ * @see https://github.com/w3c/csswg-drafts/issues/6642#issuecomment-943521484
+ */
+
+/**
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/map-gamut.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * @param {number} hue -  Hue as degrees 0..360
+ * @param {number} white -  Whiteness as percentage 0..100
+ * @param {number} black -  Blackness as percentage 0..100
+ * @return {number[]} Array of RGB components 0..1
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/hwbToRgb.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/hwbToRgb.js
+ */
+
+/**
+ * @param {number} hue - Hue as degrees 0..360
+ * @param {number} sat - Saturation as percentage 0..100
+ * @param {number} light - Lightness as percentage 0..100
+ * @return {number[]} Array of RGB components 0..1
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/hslToRgb.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/hslToRgb.js
+ */
+
+/**
+ * Assuming XYZ is relative to D50, convert to CIE Lab
+ * from CIE standard, which now defines these as a rational fraction
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Bradford chromatic adaptation from D50 to D65
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Bradford chromatic adaptation from D65 to D50
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see http://www.brucelindbloom.com/index.html?Eqn_ChromAdapt.html
+ */
+
+/**
+ * CMYK is an array of four values in the range [0.0, 1.0] the output is an
+ * array of [RGB] also in the [0.0, 1.0] range because the naive algorithm
+ * does not generate out of gamut colors neither does it generate accurate
+ * simulations of practical CMYK colors
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Convert Lab to D50-adapted XYZ
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+ */
+
+/**
+ * Convert XYZ to linear-light P3
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert XYZ to linear-light a98-rgb
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert XYZ to linear-light prophoto-rgb
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+ */
+
+/**
+ * Convert XYZ to linear-light rec2020
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of CIE LCH values to CIE Lab, and then to XYZ, adapt from
+ * D50 to D65, then convert XYZ to linear-light rec.2020 and finally to gamma
+ * corrected rec.2020 for in-gamut colors, components are in the 0.0 to 1.0
+ * range out of gamut colors may have negative components or components greater
+ * than 1.0 so check for that :)
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Convert an array of a98-rgb values in the range 0.0 - 1.0
+ * to linear light (un-companded) form. Negative values are also now accepted
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of display-p3 RGB values in the range 0.0 - 1.0
+ * to linear light (un-companded) form.
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of gamma-corrected display-p3 values in the 0.0 to 1.0
+ * range to linear-light display-p3, then to CIE XYZ, then adapt from D65
+ * to D50, then convert XYZ to CIE Lab and finally, convert to CIE LCH
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Convert an array of gamma-corrected rec.2020 values in the 0.0 to 1.0 range
+ * to linear-light sRGB, then to CIE XYZ, then adapt from D65 to D50, then
+ * convert XYZ to CIE Lab and finally, convert to CIE LCH
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Convert an array of gamma-corrected sRGB values in the 0.0 to 1.0 range
+ * to linear-light sRGB, then to CIE XYZ and return luminance (the Y value)
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Convert an array of gamma-corrected sRGB values in the 0.0 to 1.0 range to
+ * linear-light sRGB, then to CIE XYZ, then adapt from D65 to D50, then
+ * convert XYZ to CIE Lab and finally, convert to CIE LCH
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Convert an array of gamma-corrected sRGB values in the 0.0 to 1.0 range to HSL.
+ *
+ * @param {Color} RGB [r, g, b]
+ * - Red component 0..1
+ * - Green component 0..1
+ * - Blue component 0..1
+ * @return {number[]} Array of HSL values: Hue as degrees 0..360, Saturation and Lightness as percentages 0..100
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/rgbToHsl.js
+ */
+
+/**
+ * Convert an array of linear-light a98-rgb in the range 0.0-1.0
+ * to gamma corrected form. Negative values are also now accepted
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of linear-light a98-rgb values to CIE XYZ
+ * http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+ * has greater numerical precision than section 4.3.5.3 of
+ * https://www.adobe.com/digitalimag/pdfs/AdobeRGB1998.pdf
+ * but the values below were calculated from first principles
+ * from the chromaticity coordinates of R G B W
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+ * @see https://www.adobe.com/digitalimag/pdfs/AdobeRGB1998.pdf
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/matrixmaker.html
+ */
+
+/**
+ * Convert an array of linear-light display-p3 RGB in the range 0.0-1.0
+ * to gamma corrected form
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of linear-light display-p3 values to CIE XYZ
+ * using D65 (no chromatic adaptation)
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+ */
+
+/**
+ * Convert an array of linear-light prophoto-rgb in the range 0.0-1.0
+ * to gamma corrected form.
+ * Transfer curve is gamma 1.8 with a small linear portion.
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of linear-light prophoto-rgb values to CIE XYZ
+ * using D50 (so no chromatic adaptation needed afterwards)
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+ */
+
+/**
+ * Convert an array of linear-light rec2020 RGB  in the range 0.0-1.0
+ * to gamma corrected form ITU-R BT.2020-2 p.4
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of linear-light rec2020 values to CIE XYZ
+ * using  D65 (no chromatic adaptation)
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
+ */
+
+/**
+ * Convert an array of linear-light sRGB values in the range 0.0-1.0 to gamma corrected form
+ * Extended transfer function:
+ *  For negative values, linear portion extends on reflection
+ *  of axis, then uses reflected pow below that
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://en.wikipedia.org/wiki/SRGB
+ */
+
+/**
+ * Convert an array of linear-light sRGB values to CIE XYZ
+ * using sRGB's own white, D65 (no chromatic adaptation)
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of of sRGB values where in-gamut values are in the range
+ * [0 - 1] to linear light (un-companded) form.
+ * Extended transfer function:
+ *  For negative values, linear portion is extended on reflection of axis,
+ *  then reflected power function is used.
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://en.wikipedia.org/wiki/SRGB
+ */
+
+/**
+ * Convert an array of prophoto-rgb values where in-gamut Colors are in the
+ * range [0.0 - 1.0] to linear light (un-companded) form. Transfer curve is
+ * gamma 1.8 with a small linear portion. Extended transfer function
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of rec2020 RGB values in the range 0.0 - 1.0
+ * to linear light (un-companded) form.
+ * ITU-R BT.2020-2 p.4
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Convert an array of three XYZ values to u*,v* chromaticity coordinates
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Convert an array of three XYZ values to x,y chromaticity coordinates
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ */
+
+/**
+ * Given OKLab, convert to XYZ relative to D65
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js
+ */
+
+/**
+ * Given a color in a cylindical polar colorspace and an alpha value
+ * return the premultiplied form. The index says which entry in the
+ * color array corresponds to hue angle for example, in OKLCH it
+ * would be 2 while in HSL it would be 0
+ *
+ * @param color
+ * @param alpha
+ * @param hueIndex
+ *
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/conversions.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ */
+
+/**
+ * Return WCAG 2.1 contrast ratio for two sRGB values given as arrays
+ *
+ * of 0.0 to 1.0
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ *
+ * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
+ *
+ * @see https://github.com/w3c/csswg-drafts/blob/main/css-color-4/utilities.js
+ * @see https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio
  */
 
 /**
@@ -31,8 +465,7 @@
  * Warning: No error handling for incompatible dimensions!
  * @author Lea Verou 2020 MIT License
  *
- * @license W3C
- * https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
+ * @license W3C https://www.w3.org/Consortium/Legal/2015/copyright-software-and-document
  *
  * @copyright This software or document includes material copied from or derived from https://github.com/w3c/csswg-drafts/blob/main/css-color-4/multiply-matrices.js. Copyright © 2022 W3C® (MIT, ERCIM, Keio, Beihang).
  *

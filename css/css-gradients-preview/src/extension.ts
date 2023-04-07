@@ -9,7 +9,7 @@ export const log = vscode.window.createOutputChannel("CSS Gradients Preview");
 export function activate(context: vscode.ExtensionContext) {
 	const presetEnv = postcssPresetEnv({
 		stage: 0,
-		browsers: 'Chrome > 80',
+		browsers: 'Chrome > 102',
 		preserve: false,
 		enableProgressiveCustomProperties: false,
 		features: {

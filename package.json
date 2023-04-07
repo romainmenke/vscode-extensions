@@ -4,9 +4,6 @@
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
-  "workspaces": [
-    "css/**"
-  ],
   "devDependencies": {
     "yo": "^4.3.0",
     "generator-code": "^1.6.8",

@@ -1,5 +1,9 @@
 # Change Log
 
+### 1.2.1
+
+- Update dependencies
+
 ### 1.2.0
 
 - Added support for design token file imports from npm packages.
