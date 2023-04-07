@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.0
+
+- Try to add `scss` support
+
 ## 1.0.5
 
 - Update `postcss-preset-env`

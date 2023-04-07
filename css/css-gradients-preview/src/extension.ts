@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import postcss, { Root } from 'postcss';
+import postcssScss from 'postcss-scss';
 import type { Node } from 'postcss-value-parser';
 const postcssPresetEnv = require('postcss-preset-env');
 const valueParser = require('postcss-value-parser');
@@ -9,7 +10,7 @@ export const log = vscode.window.createOutputChannel("CSS Gradients Preview");
 export function activate(context: vscode.ExtensionContext) {
 	const presetEnv = postcssPresetEnv({
 		stage: 0,
-		browsers: 'Chrome > 102',
+		browsers: 'Chrome >= 102',
 		preserve: false,
 		enableProgressiveCustomProperties: false,
 		features: {
@@ -163,7 +164,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		if (activeEditor.document?.languageId !== 'css') {
+		if (activeEditor.document?.languageId !== 'css' && activeEditor.document?.languageId !== 'scss') {
 			return;
 		}
 
@@ -176,7 +177,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let ast : Root | undefined = undefined;
 		try {
-			ast = postcss.parse(css, { from: 'css-gradient-preview' });
+			if (activeEditor.document?.languageId === 'scss') {
+				ast = postcssScss.parse(css, { from: 'css-gradient-preview' });
+			} else {
+				ast = postcss.parse(css, { from: 'css-gradient-preview' });
+			}
 		} catch (_) {
 			return;
 		}
